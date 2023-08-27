@@ -25,3 +25,12 @@ Update the scripts to the latest version.
 ### Common commands
 #### ./restic prune
 Manually prune the repository if you have `BACKUP_PRUNE` set to `false`. Make this a regular cron task, probably monthly.
+
+#### ./restic snapshots
+View existing snapshots on your repository.
+
+#### ./restic self-update
+Update restic binary automatically in `/tmp/restic`.
+
+#### ./restic stats
+Show statistics on your repository, such as total size and file count.
