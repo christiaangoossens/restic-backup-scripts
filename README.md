@@ -39,4 +39,4 @@ Update restic binary automatically in `/tmp/restic`.
 Show statistics on your repository, such as total size and file count.
 
 ## Append-only backups
-You might have append-only backups running from one machine using these scripts, while having the `./cleanup` command run from another machine. For this, configure all backup retentions to `0` on the `sending` machine and run `./run-backup` and configure the correct retentions on the `admin` machine and run `./cleanup` there.
+You might have append-only backups running from one machine using these scripts, while having the `./cleanup` command run from another machine. For this, configure all backup retentions to `0` on the `sending` machine and run `./run-backup` and configure the correct retentions on the `admin` machine and run `./cleanup` there. Please review the [safety considerations documentation](https://github.com/restic/restic/blob/master/doc/060_forget.rst#security-considerations-in-append-only-mode) for more info.
