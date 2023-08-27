@@ -1,8 +1,8 @@
-## Restic Helper Scripts
+# Restic Helper Scripts
 Helper scripts to use restic more easily on Linux x86, x64 and ARM (such as Truenas Scale or generic Debian/Ubuntu/Arch etc.).
 Scripts might work on BSD if you try that by setting OS to BSD.
 
-### How to use
+## How to use
 Simple steps:
 
 1. Install `git`
@@ -12,17 +12,20 @@ Simple steps:
 5. Call `./restic` with your arguments to use restic directly with the env. For example `./restic version` should give you the current version.
 6. Profit!
 
-### Convenience scripts
+## Convenience scripts
 #### ./init
 Initializes the repository that you configured in .env.
 
 #### ./run-backup
-Automatically runs the backup as configured. Use .env file to configure paths to be included and retention policy.
+Automatically runs the backup and cleanup as configured. Use .env file to configure paths to be included and retention policy.
+
+#### ./cleanup
+Automatically runs the backup retention policy as configured. Use .env file to configure paths to be included and retention policy.
 
 #### ./update
 Update the scripts to the latest version.
 
-### Common commands
+## Common commands
 #### ./restic prune
 Manually prune the repository if you have `BACKUP_PRUNE` set to `false`. Make this a regular cron task, probably monthly.
 
@@ -34,3 +37,6 @@ Update restic binary automatically in `/tmp/restic`.
 
 #### ./restic stats
 Show statistics on your repository, such as total size and file count.
+
+## Append-only backups
+You might have append-only backups running from one machine using these scripts, while having the `./cleanup` command run from another machine. For this, configure all backup retentions to `0` on the `sending` machine and run `./run-backup` and configure the correct retentions on the `admin` machine and run `./cleanup` there.
