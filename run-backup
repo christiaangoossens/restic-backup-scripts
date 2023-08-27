@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [ ! -f .env ]; then
+    echo "No .env file present. Please copy .env.example to .env and retry."
+    exit 1
+fi
+
+source .env
+
+backup_directories=(${BACKUP_DIRECTORIES//,/ })       # Splitting by colon into an array
+backup_retention_last="$BACKUP_RETENTION_LAST"
+backup_retention_daily="$BACKUP_RETENTION_DAILY"
+backup_retention_weekly="$BACKUP_RETENTION_WEEKLY"
+backup_retention_monthly="$BACKUP_RETENTION_MONTHLY"
+backup_retention_yearly="$BACKUP_RETENTION_YEARLY"
+
+# Run restic backup
+echo "Running backup on: ${backup_directories[@]}"
+./restic backup "${backup_directories[@]}" "$@"
+
+if [ $? -eq 0 ]; then
+    echo "Backup completed successfully!"
+    echo 
+    
+    # Prune old backups
+    ./restic forget \
+        --keep-last "$backup_retention_last" \
+        --keep-daily "$backup_retention_daily" \
+        --keep-weekly "$backup_retention_weekly" \
+        --keep-monthly "$backup_retention_monthly" \
+        --keep-yearly "$backup_retention_yearly" "$@"
+    
+    if [ $? -eq 0 ]; then
+        echo "Backup retention policy applied."
+    else
+        echo "Failed to apply backup retention policy."
+    fi
+else
+    echo "Backup failed."
+fi

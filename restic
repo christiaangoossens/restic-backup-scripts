@@ -20,5 +20,11 @@ if [ "$VERBOSE" == true ]; then
     echo "Restic is using remote: $RESTIC_REPOSITORY" 
 fi
 
+if [ -n "$RESTIC_PASSWORD_FILE" ]; then
+    $RESTIC_PASSWORD=$(cat "$RESTIC_PASSWORD_FILE")
+elif [ -n "$RESTIC_PASSWORD_COMMAND" ]; then
+    $RESTIC_PASSWORD=$(eval "$RESTIC_PASSWORD_COMMAND")
+fi
+
 # Call restic with the provided arguments
-./bin/restic "$@"
+env RESTIC_PASSWORD="$RESTIC_PASSWORD" ./bin/restic -r $RESTIC_REPOSITORY "$@"

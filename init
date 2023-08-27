@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ ! -f .env ]; then
+    echo "No .env file present. Please copy .env.example to .env and retry."
+    exit 1
+fi
+
+source .env
+
+if [ -n "$RESTIC_PASSWORD_FILE" ]; then
+    $RESTIC_PASSWORD=$(cat "$RESTIC_PASSWORD_FILE")
+elif [ -n "$RESTIC_PASSWORD_COMMAND" ]; then
+    $RESTIC_PASSWORD=$(eval "$RESTIC_PASSWORD_COMMAND")
+fi
+
+echo "Restic is initializing remote: $RESTIC_REPOSITORY" 
+echo -n "$RESTIC_PASSWORD" | ./bin/restic -r $RESTIC_REPOSITORY init --from-password-file=-
