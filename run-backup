@@ -23,7 +23,7 @@ if [ $? -eq 0 ]; then
     echo 
     
     # Prune old backups
-    ./restic forget \
+    ./restic forget --prune \
         --keep-last "$backup_retention_last" \
         --keep-daily "$backup_retention_daily" \
         --keep-weekly "$backup_retention_weekly" \
