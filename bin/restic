@@ -1,0 +1,60 @@
+#!/bin/bash
+
+VERBOSE=false
+
+for arg in "$@"; do
+    if [ "$arg" == "-v" ] || [ "$arg" == "--verbose" ]; then
+        VERBOSE=true
+        break
+    fi
+done
+
+# Check if curl is installed
+if ! command -v curl &>/dev/null; then
+    echo "Error: 'curl' is not installed. Please install it before running this script."
+    exit 1
+fi
+
+# Check if bunzip2 is installed
+if ! command -v bunzip2 &>/dev/null; then
+    echo "Error: 'bunzip2' is not installed. Please install it before running this script."
+    exit 1
+fi
+
+# Check if the 'restic' binary exists in the /tmp directory
+if [ -x /tmp/restic ]; then
+    if [ "$VERBOSE" == true ]; then
+        echo "Reusing existing 'restic' binary."
+    fi
+else
+    if [ "$VERBOSE" == true ]; then
+        echo "Downloading the latest 'restic' release..."
+    fi
+
+    # Fetch the latest release URL from GitHub API
+    release_url=$(curl -s https://api.github.com/repos/restic/restic/releases/latest | grep "browser_download_url.*linux_amd64" | cut -d '"' -f 4)
+    if [ -z "$release_url" ]; then
+        echo "Failed to fetch 'restic' release URL."
+        exit 1
+    fi
+
+    # Download the compressed binary to /tmp and name it 'restic.bz2'
+    if [ "$VERBOSE" == true ]; then
+        curl -Lo /tmp/restic.bz2 "$release_url"
+    else
+        curl -s -Lo /tmp/restic.bz2 "$release_url"
+    fi
+    if [ "$VERBOSE" == true ]; then
+        echo "'restic' binary compressed download completed."
+    fi
+
+    # Decompress the binary
+    bunzip2 -f /tmp/restic.bz2
+    chmod +x /tmp/restic
+    if [ "$VERBOSE" == true ]; then 
+        echo "'restic' binary decompressed and made executable."
+    fi
+fi
+
+# Run /tmp/restic with passed arguments
+/tmp/restic "$@"
