@@ -23,13 +23,22 @@ if [ $? -eq 0 ]; then
     echo 
     
     # Prune old backups
-    ./restic forget --prune \
-        --keep-last "$backup_retention_last" \
-        --keep-daily "$backup_retention_daily" \
-        --keep-weekly "$backup_retention_weekly" \
-        --keep-monthly "$backup_retention_monthly" \
-        --keep-yearly "$backup_retention_yearly" "$@"
-    
+    forget_flags=(
+        "--keep-last" "$backup_retention_last"
+        "--keep-daily" "$backup_retention_daily"
+        "--keep-weekly" "$backup_retention_weekly"
+        "--keep-monthly" "$backup_retention_monthly"
+        "--keep-yearly" "$backup_retention_yearly"
+    )
+
+    # Add prune flag if BACKUP_PRUNE is not "false"
+    if [ "$BACKUP_PRUNE" != "false" ]; then
+        forget_flags+=("--prune")
+    fi
+
+    # Run the restic forget command with or without prune based on BACKUP_PRUNE
+    ./restic forget "${forget_flags[@]}" "$@"
+
     if [ $? -eq 0 ]; then
         echo "Backup retention policy applied."
     else

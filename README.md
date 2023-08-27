@@ -9,10 +9,13 @@ Simple steps:
 2. Call `./restic` with your arguments to use restic directly with the env. For example `./restic version` should give you the current version.
 3. Profit!
 
-
 ### Convenience scripts
 #### ./init
 Initializes the repository that you configured in .env.
 
 #### ./run-backup
 Automatically runs the backup as configured. Use .env file to configure paths to be included and retention policy.
+
+### Common commands
+#### ./restic prune
+Manually prune the repository if you have `BACKUP_PRUNE` set to `false`. Make this a regular cron task, probably monthly.
