@@ -1,0 +1,24 @@
+#!/bin/bash
+
+VERBOSE=false
+
+for arg in "$@"; do
+    if [ "$arg" == "-v" ] || [ "$arg" == "--verbose" ]; then
+        VERBOSE=true
+        break
+    fi
+done
+
+if [ ! -f .env ]; then
+    echo "No .env file present. Please copy .env.example to .env and retry."
+    exit 1
+fi
+
+source .env
+
+if [ "$VERBOSE" == true ]; then
+    echo "Restic is using remote: $RESTIC_REPOSITORY" 
+fi
+
+# Call restic with the provided arguments
+./bin/restic "$@"
