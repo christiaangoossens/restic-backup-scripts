@@ -1,0 +1,22 @@
+#!/bin/bash
+# Set the default env path to the script's directory
+DIR="$(dirname "$0")"
+CONFIG_PATH="$DIR/.env"
+
+# Check for custom env path in the arguments
+for arg in "$@"; do
+  case $arg in
+    -e=*|--env-file=*)
+      CONFIG_PATH="${arg#*=}"
+      ;;
+  esac
+done
+
+# Check if the env file exists
+if [ ! -f "$CONFIG_PATH" ]; then
+    echo "No .env file present at $CONFIG_PATH. Please copy .env.example to .env and retry."
+    exit 1
+fi
+
+# Source the env file
+source "$CONFIG_PATH"

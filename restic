@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DIR="$(dirname "$0")"
+source $DIR/bin/load-env
+
 VERBOSE=false
 
 for arg in "$@"; do
@@ -8,13 +11,6 @@ for arg in "$@"; do
         break
     fi
 done
-
-if [ ! -f .env ]; then
-    echo "No .env file present. Please copy .env.example to .env and retry."
-    exit 1
-fi
-
-source .env
 
 if [ "$VERBOSE" == true ]; then
     echo "Restic is using remote: $RESTIC_REPOSITORY" 
@@ -27,4 +23,4 @@ elif [ -n "$RESTIC_PASSWORD_COMMAND" ]; then
 fi
 
 # Call restic with the provided arguments
-env RESTIC_PASSWORD="$RESTIC_PASSWORD" ./bin/restic -r $RESTIC_REPOSITORY "$@"
+env RESTIC_PASSWORD="$RESTIC_PASSWORD" $DIR/bin/restic -r $RESTIC_REPOSITORY "$@"

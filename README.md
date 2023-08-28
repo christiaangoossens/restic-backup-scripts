@@ -12,6 +12,9 @@ Simple steps:
 5. Call `./restic` with your arguments to use restic directly with the env. For example `./restic version` should give you the current version.
 6. Profit!
 
+### Multiple env files
+The scripts also support passing either `-e=PATH` or `--env-file=PATH` as commands to set the env var to a different path.
+
 ## Convenience scripts
 #### ./init
 Initializes the repository that you configured in .env.

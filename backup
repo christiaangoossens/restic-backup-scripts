@@ -1,23 +1,19 @@
 #!/bin/bash
 
-if [ ! -f .env ]; then
-    echo "No .env file present. Please copy .env.example to .env and retry."
-    exit 1
-fi
-
-source .env
+DIR="$(dirname "$0")"
+source $DIR/bin/load-env
 
 backup_directories=(${BACKUP_DIRECTORIES//,/ })       # Splitting by colon into an array
 
 # Run restic backup
 echo "Running backup on: ${backup_directories[@]}"
-./restic backup "${backup_directories[@]}" "$@"
+$DIR/restic backup "${backup_directories[@]}" "$@"
 
 if [ $? -eq 0 ]; then
     echo "Backup completed successfully!"
     echo 
     
-    ./cleanup
+    $DIR/cleanup
 elif [ $? -eq 3 ]; then
     echo "Backup failed to copy some source files. Exit code 3."
 else

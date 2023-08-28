@@ -82,4 +82,19 @@ else
 fi
 
 # Run /tmp/restic with passed arguments
-/tmp/restic "$@"
+# Remove custom arguments from $@ before calling restic
+safe_args=()
+
+# Check for custom env path in the arguments
+for arg in "$@"; do
+  case $arg in
+    -e=*|--env-file=*)
+      ENV_PATH="${arg#*=}"
+      ;;
+    *)
+      safe_args+=("$arg")
+      ;;
+  esac
+done
+
+/tmp/restic "${safe_args[@]}"
