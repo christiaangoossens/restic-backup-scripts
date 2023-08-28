@@ -25,6 +25,9 @@ Automatically restores the last snapshot to the configured directories. Use .env
 #### ./cleanup
 Automatically runs the backup retention policy as configured. Use .env file to configure paths to be included and retention policy.
 
+#### ./file-tree
+Gives a file tree of the latest snapshot, only showing files and their sizes
+
 #### ./update
 Update the scripts to the latest version.
 
