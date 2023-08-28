@@ -21,7 +21,7 @@ if [ $? -eq 0 ]; then
     echo "Backup completed successfully!"
     echo 
     
-    $DIR/cleanup
+    $DIR/cleanup "$@"
 elif [ $? -eq 3 ]; then
     echo "Backup failed to copy some source files. Exit code 3."
 else

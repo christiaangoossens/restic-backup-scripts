@@ -89,7 +89,6 @@ safe_args=()
 for arg in "$@"; do
   case $arg in
     -e=*|--env-file=*)
-      ENV_PATH="${arg#*=}"
       ;;
     *)
       safe_args+=("$arg")
