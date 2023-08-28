@@ -3,8 +3,8 @@
 DIR="$(dirname "$0")"
 source $DIR/bin/load-env
 
-backup_directories=(${BACKUP_DIRECTORIES//,/ })       # Splitting by colon into an array
-exclude_directories=(${BACKUP_EXCLUDE_DIRECTORIES//,/ })     # Splitting by comma into an array
+IFS=',' read -r -a backup_directories <<< "$BACKUP_DIRECTORIES"
+IFS=',' read -r -a exclude_directories <<< "$BACKUP_EXCLUDE_DIRECTORIES"
 
 # Run restic backup
 echo "Running backup on: ${backup_directories[@]}"
