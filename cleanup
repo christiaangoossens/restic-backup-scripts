@@ -12,6 +12,7 @@ backup_retention_daily="$BACKUP_RETENTION_DAILY"
 backup_retention_weekly="$BACKUP_RETENTION_WEEKLY"
 backup_retention_monthly="$BACKUP_RETENTION_MONTHLY"
 backup_retention_yearly="$BACKUP_RETENTION_YEARLY"
+backup_keep_within="$BACKUP_KEEP_WITHIN"
 
 # Prune old backups
 forget_flags=(
@@ -21,6 +22,11 @@ forget_flags=(
     "--keep-monthly" "$backup_retention_monthly"
     "--keep-yearly" "$backup_retention_yearly"
 )
+
+# Add keep-within flag if BACKUP_KEEP_WITHIN is set
+if [ -n "$backup_keep_within" ]; then
+    forget_flags+=("--keep-within" "$backup_keep_within")
+fi
 
 # Add prune flag if BACKUP_PRUNE is not "false"
 if [ "$BACKUP_PRUNE" != "false" ]; then
