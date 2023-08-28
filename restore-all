@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ ! -f .env ]; then
+    echo "No .env file present. Please copy .env.example to .env and retry."
+    exit 1
+fi
+
+source .env
+
+backup_directories=(${BACKUP_DIRECTORIES//,/ })       # Splitting by colon into an array
+
+# Iterate over backup locations
+for location in "${backup_directories[@]}"; do
+    echo "Restoring from backup location: $location"
+    
+    # Perform the restore using restic
+    ./restic restore latest:$location --target "$location" "$@"
+    
+    echo "Restore complete for: $location"
+    echo
+done

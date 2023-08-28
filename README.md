@@ -16,8 +16,11 @@ Simple steps:
 #### ./init
 Initializes the repository that you configured in .env.
 
-#### ./run-backup
+#### ./backup
 Automatically runs the backup and cleanup as configured. Use .env file to configure paths to be included and retention policy.
+
+#### ./restore-all
+Automatically restores the last snapshot to the configured directories. Use .env file to configure paths to be included/restored.
 
 #### ./cleanup
 Automatically runs the backup retention policy as configured. Use .env file to configure paths to be included and retention policy.
