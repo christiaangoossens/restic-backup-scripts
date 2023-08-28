@@ -4,10 +4,18 @@ DIR="$(dirname "$0")"
 source $DIR/bin/load-env
 
 backup_directories=(${BACKUP_DIRECTORIES//,/ })       # Splitting by colon into an array
+exclude_directories=(${BACKUP_EXCLUDE_DIRECTORIES//,/ })     # Splitting by comma into an array
 
 # Run restic backup
 echo "Running backup on: ${backup_directories[@]}"
-$DIR/restic backup "${backup_directories[@]}" "$@"
+
+EXCLUDES=()
+for exclude in "${exclude_directories[@]}"; do
+    echo "Excluding dir $exclude from backup"
+    EXCLUDES+=("--exclude=$exclude")
+done
+
+$DIR/restic backup "${backup_directories[@]}" "${EXCLUDES[@]}" "$@"
 
 if [ $? -eq 0 ]; then
     echo "Backup completed successfully!"
